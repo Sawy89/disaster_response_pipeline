@@ -1,4 +1,6 @@
 # Disaster Response Pipeline Project
+disaster response pipeline project of Data Science Nanodegree program from Udacity
+
 
 ### Instructions:
 1. Run the following commands in the project's root directory to set up your database and model.
