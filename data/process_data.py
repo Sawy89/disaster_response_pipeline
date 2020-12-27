@@ -2,7 +2,7 @@
 messages_filepath = 'disaster_messages.csv'
 categories_filepath = 'disaster_categories.csv'
 
-python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/YourDatabaseName.db
+python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/disaster_data.db
 '''
 
 # %% Import 
@@ -59,7 +59,7 @@ def save_data(df, database_filename):
 
     # Create engine & upoad
     engine = create_engine(f'sqlite:///{database_filename}')
-    df.to_sql('YourTableName', engine, if_exists='replace')
+    df.to_sql('messages', engine, if_exists='replace')
 
 
 # %% Main
