@@ -14,25 +14,52 @@ from sqlalchemy import create_engine
 
 # %% Functions
 def load_data(messages_filepath, categories_filepath):
+    '''
+    Load CSV files with data and merge dataframes
+    '''
+
+    # Load
     df_messages = pd.read_csv(messages_filepath)
     df_categories = pd.read_csv(categories_filepath)
 
-    # Join
+    # Reset index & Join
     df_messages.set_index(['id'], inplace=True)
     df_categories.set_index(['id'], inplace=True)
 
     df = df_messages.join(df_categories)
+
     return df
 
 
 def clean_data(df):
+    '''
+    Clean the DataFrame:
+    - categories columns is split in many columns and parsed as bolean
+    '''
+
+    # Clean categories column
+    categories_list = [i.split('-')[0] for i in df['categories'].iloc[0].split(';')]
+    categories = df['categories'].str.split(';', expand=True)
+    categories.columns = categories_list
+    categories = categories.applymap(lambda x: int(x.split('-')[1]))
+    
+    # join and drop duplicates
+    df = df.drop('categories', axis=1)
+    df = pd.concat([df, categories], axis=1)
+    df = df.drop_duplicates()
+
     return df
 
 
 def save_data(df, database_filename):
+    '''
+    upload df data on SQLlite database
+    Replace if exists
+    '''
+
+    # Create engine & upoad
     engine = create_engine(f'sqlite:///{database_filename}')
     df.to_sql('YourTableName', engine, if_exists='replace')
-    pass  
 
 
 # %% Main
