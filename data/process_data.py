@@ -1,8 +1,24 @@
+'''
+messages_filepath = 'disaster_messages.csv'
+categories_filepath = 'disaster_categories.csv'
+'''
+
+# %% Import 
 import sys
+import pandas as pd
 
 
+# %% Functions
 def load_data(messages_filepath, categories_filepath):
-    pass
+    df_messages = pd.read_csv(messages_filepath)
+    df_categories = pd.read_csv(categories_filepath)
+
+    # Join
+    df_messages.set_index(['id'], inplace=True)
+    df_categories.set_index(['id'], inplace=True)
+
+    df = df_messages.join(df_categories)
+    return df
 
 
 def clean_data(df):
@@ -13,6 +29,7 @@ def save_data(df, database_filename):
     pass  
 
 
+# %% Main
 def main():
     if len(sys.argv) == 4:
 
