@@ -21,6 +21,7 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.pipeline import Pipeline
+from sklearn.metrics import confusion_matrix
 
 
 # %% Functions
@@ -73,7 +74,13 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
-    pass
+    '''
+    Report the f1 score, precision and recall for each output category of the dataset. 
+    You can do this by iterating through the columns and calling sklearn's classification_report on each.
+    '''
+    # Y_pred = model.predict(X_test)
+    # confusion_mat = confusion_matrix(Y_test, Y_pred, labels=category_names)
+    # accuracy = (Y_pred == Y_test).mean()
 
 
 def save_model(model, model_filepath):
