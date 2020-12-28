@@ -1,8 +1,8 @@
 '''
 database_filepath = 'data/disaster_data.db'
-model_filepath = 'data/model.pkl'
+model_filepath = 'models/model.pkl'
 
-python models/train_classifier.py data/disaster_data.db data/model.pkl
+python models/train_classifier.py data/disaster_data.db models/model.pkl
 '''
 
 # %% Download nltk
@@ -66,7 +66,7 @@ def build_model():
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
-        ('clf', MultiOutputClassifier(AdaBoostClassifier()))
+        ('clf', MultiOutputClassifier(RandomForestClassifier()))
     ])
 
     return pipeline
@@ -77,9 +77,8 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
-    joblib.dumps(model, model_filepath)
-    pass
-
+    joblib.dump(model,  open(model_filepath, 'wb'))
+    
 
 def main():
     if len(sys.argv) == 3:
