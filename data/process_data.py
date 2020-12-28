@@ -43,10 +43,13 @@ def clean_data(df):
     categories.columns = categories_list
     categories = categories.applymap(lambda x: int(x.split('-')[1]))
     
-    # join and drop duplicates
+    # join
     df = df.drop('categories', axis=1)
     df = pd.concat([df, categories], axis=1)
+
+    # Drop duplicates & strange values
     df = df.drop_duplicates()
+    df = df.loc[(df==2).sum(axis=1)==0]
 
     return df
 
