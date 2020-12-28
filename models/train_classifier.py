@@ -8,15 +8,18 @@ python models/train_classifier.py data/disaster_data.db models/model.pkl
 # %% Download nltk
 import nltk
 nltk.download(['punkt', 'wordnet'])
+
+
 # %% Import
 import sys
-from sklearn.model_selection import train_test_split
-from sqlalchemy import create_engine
-import pandas as pd
+import datetime
 import re
 import joblib
+from sqlalchemy import create_engine
+import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
+from sklearn.model_selection import train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -98,7 +101,9 @@ def main():
         model = build_model()
         
         print('Training model...')
+        start = datetime.datetime.now()
         model.fit(X_train, Y_train)
+        print(f'   DONE in {datetime.datetime.now()-start}')
         
         print('Evaluating model...')
         evaluate_model(model, X_test, Y_test, category_names)
