@@ -1,17 +1,26 @@
 '''
-messages_filepath = 'disaster_messages.csv'
-categories_filepath = 'disaster_categories.csv'
-
 database_filepath = 'data/disaster_data.db'
+model_filepath = 'data/model.pkl'
 
-python models/train_classifier.py
+python models/train_classifier.py data/disaster_data.db data/model.pkl
 '''
 
+# %% Download nltk
+import nltk
+nltk.download(['punkt', 'wordnet'])
 # %% Import
 import sys
 from sklearn.model_selection import train_test_split
 from sqlalchemy import create_engine
 import pandas as pd
+import re
+import joblib
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.pipeline import Pipeline
 
 
 # %% Functions
@@ -27,7 +36,7 @@ def load_data(database_filepath):
     # Get output variables
     df.set_index('id', inplace=True)
     df.drop(columns=['original'], inplace=True)
-    X = df[['message','genre']]
+    X = df['message']
     Y = df.drop(columns=['message','genre'])
     category_names = Y.columns
 
@@ -35,11 +44,32 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
-    pass
+    # Convert to lowercase
+    text = text.lower() 
+
+    # Remove punctuation characters
+    text = re.sub(r"[^a-zA-Z0-9]", " ", text) 
+
+    # tokenize
+    tokens = word_tokenize(text)
+    lemmatizer = WordNetLemmatizer()
+
+    clean_tokens = []
+    for tok in tokens:
+        clean_tok = lemmatizer.lemmatize(tok).lower().strip()
+        clean_tokens.append(clean_tok)
+
+    return clean_tokens
 
 
 def build_model():
-    pass
+    pipeline = Pipeline([
+        ('vect', CountVectorizer(tokenizer=tokenize)),
+        ('tfidf', TfidfTransformer()),
+        ('clf', MultiOutputClassifier(AdaBoostClassifier()))
+    ])
+
+    return pipeline
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
@@ -47,6 +77,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    joblib.dumps(model, model_filepath)
     pass
 
 
