@@ -1,8 +1,37 @@
+'''
+messages_filepath = 'disaster_messages.csv'
+categories_filepath = 'disaster_categories.csv'
+
+database_filepath = 'data/disaster_data.db'
+
+python models/train_classifier.py
+'''
+
+# %% Import
 import sys
+from sklearn.model_selection import train_test_split
+from sqlalchemy import create_engine
+import pandas as pd
 
 
+# %% Functions
 def load_data(database_filepath):
-    pass
+    ''' 
+    Function that loads DB database_filepath - table messages
+    Return the table diveded in X, y and category_names
+    '''
+    # Load data
+    engine = create_engine(f'sqlite:///{database_filepath}')
+    df = pd.read_sql('SELECT * FROM messages', engine)
+
+    # Get output variables
+    df.set_index('id', inplace=True)
+    df.drop(columns=['original'], inplace=True)
+    X = df[['message','genre']]
+    Y = df.drop(columns=['message','genre'])
+    category_names = Y.columns
+
+    return X, Y, category_names
 
 
 def tokenize(text):
@@ -49,5 +78,6 @@ def main():
               'train_classifier.py ../data/DisasterResponse.db classifier.pkl')
 
 
+# %% Main
 if __name__ == '__main__':
     main()
