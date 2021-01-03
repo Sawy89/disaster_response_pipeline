@@ -24,7 +24,7 @@ from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report, confusion_matrix
 
 
 # %% Functions
@@ -68,9 +68,9 @@ def tokenize(text):
 
 def build_model():
     pipeline = Pipeline([
-        ('vect', CountVectorizer(tokenizer=tokenize)),
+        ('vect', CountVectorizer(tokenizer=tokenize, ngram_range=(1,2))),
         ('tfidf', TfidfTransformer()),
-        ('clf', MultiOutputClassifier(RandomForestClassifier()))
+        ('clf', MultiOutputClassifier(AdaBoostClassifier()))
     ])
 
     return pipeline
@@ -81,9 +81,19 @@ def evaluate_model(model, X_test, Y_test, category_names):
     Report the f1 score, precision and recall for each output category of the dataset. 
     You can do this by iterating through the columns and calling sklearn's classification_report on each.
     '''
-    # Y_pred = model.predict(X_test)
-    # confusion_mat = confusion_matrix(Y_test, Y_pred, labels=category_names)
-    # accuracy = (Y_pred == Y_test).mean()
+    y_pred = model.predict(X_test)
+    Y_pred = Y_test.copy()
+    Y_pred[:] = y_pred
+
+    df_result = pd.DataFrame(columns=['f1-score', 'precision', 'recall'])
+    for label in category_names:
+        classification_rep = classification_report(Y_test[label], Y_pred[label], output_dict=True)
+        df_result.loc[label, ['f1-score', 'precision', 'recall']] = classification_rep['weighted avg']
+    res = df_result.mean()
+    
+    print(f"   The average f1-score is {res['f1-score']}")
+    print(f"   The average precision is {res['precision']}")
+    print(f"   The average recall is {res['recall']}")
 
 
 def save_model(model, model_filepath):
