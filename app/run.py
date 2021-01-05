@@ -64,13 +64,7 @@ def index():
             ],
 
             'layout': {
-                'title': 'Distribution of Message Genres',
-                # 'yaxis': {
-                #     'title': "Count"
-                # },
-                # 'xaxis': {
-                #     'title': "Genre"
-                # }
+                'title': 'Distribution of Message Genres'
             }
         },
 
@@ -81,10 +75,12 @@ def index():
                 'title': 'Distribution of classes',
                 'barmode': 'stack',
                 'yaxis': {
-                    'title': "Count"
+                    'title': "number of messages"
                 },
                 'xaxis': {
-                    'title': "Classes"
+                    'title': "Classes",
+                    'tickangle': -45,
+                    'automargin': True
                 }
             }
         }
