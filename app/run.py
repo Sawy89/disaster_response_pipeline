@@ -1,18 +1,21 @@
+# %% Import
 import json
 import plotly
 import pandas as pd
+import os
 
+import nltk
+nltk.download(['punkt', 'wordnet'])
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
 from flask import Flask
 from flask import render_template, request, jsonify
-from plotly.graph_objs import Bar
-# from sklearn.externals import joblib
+from plotly.graph_objs import Bar, Pie
 import joblib
 from sqlalchemy import create_engine
 
-
+## Init & Funct
 app = Flask(__name__)
 
 def tokenize(text):
@@ -34,38 +37,54 @@ df = pd.read_sql_table('messages', engine)
 model = joblib.load("../models/model.pkl")
 
 
+# %% Endpoints
 # index webpage displays cool visuals and receives user input text for model
 @app.route('/')
-def home():
-    return {'status': 'ciao'}
-
-
 @app.route('/index')
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
     
+    class_count = df.drop(columns=['id','message','original']).groupby('genre').sum()
+    data2 = []
+    for genre_val in class_count.index:
+        tmp = class_count.loc[genre_val]
+        data2.append(Bar(x=list(tmp.index),y=tmp.values, name=genre_val))
+    
     # create visuals
-    # TODO: Below is an example - modify to create your own visuals
     graphs = [
         {
             'data': [
-                Bar(
-                    x=genre_names,
-                    y=genre_counts
+                Pie(
+                    labels=genre_names,
+                    values=genre_counts
                 )
             ],
 
             'layout': {
                 'title': 'Distribution of Message Genres',
+                # 'yaxis': {
+                #     'title': "Count"
+                # },
+                # 'xaxis': {
+                #     'title': "Genre"
+                # }
+            }
+        },
+
+        {
+            'data': data2,
+
+            'layout': {
+                'title': 'Distribution of classes',
+                'barmode': 'stack',
                 'yaxis': {
                     'title': "Count"
                 },
                 'xaxis': {
-                    'title': "Genre"
+                    'title': "Classes"
                 }
             }
         }
@@ -97,6 +116,7 @@ def go():
     )
 
 
+# %% Main
 def main():
     app.run(host='0.0.0.0', port=3001, debug=True)
 
