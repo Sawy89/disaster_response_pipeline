@@ -2,7 +2,7 @@
 messages_filepath = 'disaster_messages.csv'
 categories_filepath = 'disaster_categories.csv'
 
-python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/disaster_data.db
+python data/process_data.py data/disaster_messages.csv data/disaster_categories.csv data/DisasterResponse.db
 '''
 
 # %% Import 

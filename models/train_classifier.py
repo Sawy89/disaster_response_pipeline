@@ -1,8 +1,8 @@
 '''
-database_filepath = 'data/disaster_data.db'
+database_filepath = 'data/DisasterResponse.db'
 model_filepath = 'models/model.pkl'
 
-python models/train_classifier.py data/disaster_data.db models/model.pkl
+python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
 '''
 
 # %% Download nltk
