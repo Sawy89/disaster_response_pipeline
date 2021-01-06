@@ -13,7 +13,9 @@ disaster response pipeline project of Data Science Nanodegree program from Udaci
 
 2. Run the following command in the app's directory to run your web app.
     `python run.py`
+    
     OR 
+    
    If you don'r have a ready environment, you can do that also by running the following command
    `start.bat` 
    that will build & launch the app in docker
@@ -25,7 +27,7 @@ disaster response pipeline project of Data Science Nanodegree program from Udaci
 - `docker-compose.yml`, `Dockerfile` and `requirements.txt`: running the app in docker
 - `start.bat`: commands to launch for starting the webapp
 
-### /app
+### app
 - `run.py`: flask webapp with graph creation
 - `templates/go.html`: web-page that perform the classification of input message
 - `templates/master.html`: index web-page with data visualization
