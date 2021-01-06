@@ -1,3 +1,6 @@
+'''
+Web app in Flask for data visualization
+'''
 # %% Import
 import json
 import plotly
@@ -15,10 +18,13 @@ from plotly.graph_objs import Bar, Pie
 import joblib
 from sqlalchemy import create_engine
 
-## Init & Funct
+# %% Init & Funct
 app = Flask(__name__)
 
 def tokenize(text):
+    '''
+    Function for tokenize & lemmatize a text for ML pipeline
+    '''
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -42,6 +48,11 @@ model = joblib.load("../models/classifier.pkl")
 @app.route('/')
 @app.route('/index')
 def index():
+    '''
+    index webpage displays cool visuals and receives user input text for model
+    - show some graph on the messages stored and classified
+    - input form for classifying a new message
+    '''
     
     # extract data needed for visuals
     genre_counts = df.groupby('genre').count()['message']
@@ -94,9 +105,11 @@ def index():
     return render_template('master.html', ids=ids, graphJSON=graphJSON)
 
 
-# web page that handles user query and displays model results
 @app.route('/go')
 def go():
+    '''
+    web page that handles user query and displays model results
+    '''
     # save user input in query
     query = request.args.get('query', '') 
 

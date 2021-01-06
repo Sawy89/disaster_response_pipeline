@@ -1,8 +1,11 @@
 '''
-database_filepath = 'data/DisasterResponse.db'
-model_filepath = 'models/model.pkl'
+Script for training the classifier model getting data from DB
 
-python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
+INPUT DATA: 
+    database_filepath = 'data/DisasterResponse.db'
+    model_filepath = 'models/model.pkl'
+
+    python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl
 '''
 
 # %% Download nltk
@@ -48,6 +51,10 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    '''
+    Function for tokenize & lemmatize a text for ML pipeline
+    '''
+
     # Convert to lowercase
     text = text.lower() 
 
@@ -67,6 +74,9 @@ def tokenize(text):
 
 
 def build_model():
+    '''
+    Function that build the ML pipeline 
+    '''
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize, ngram_range=(1,2))),
         ('tfidf', TfidfTransformer()),
@@ -97,6 +107,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    '''Save the model in pickle file'''
     joblib.dump(model,  open(model_filepath, 'wb'))
     
 
