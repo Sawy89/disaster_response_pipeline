@@ -76,6 +76,7 @@ def tokenize(text):
 def build_model():
     '''
     Function that build the ML pipeline 
+    The parameters are optimized with Gridsearch on jupyter notebook
     '''
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize, ngram_range=(1,2))),
@@ -99,6 +100,7 @@ def evaluate_model(model, X_test, Y_test, category_names):
     for label in category_names:
         classification_rep = classification_report(Y_test[label], Y_pred[label], output_dict=True)
         df_result.loc[label, ['f1-score', 'precision', 'recall']] = classification_rep['weighted avg']
+        print(f"{label}: {classification_rep['weighted avg']}")
     res = df_result.mean()
     
     print(f"   The average f1-score is {res['f1-score']}")
