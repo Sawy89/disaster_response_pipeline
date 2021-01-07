@@ -1,5 +1,11 @@
 # Disaster Response Pipeline Project
 disaster response pipeline project of Data Science Nanodegree program from Udacity
+The purpose of this project is to build:
+- a pipeline to clean some messages data
+- create a model for classifying some emergency messages in categories
+- a webapp to show some statistic on messages, and perform the classification on a message.
+
+This solution could be used to help during a disaster: in fact, this could be used (with further development) by people in charge of the response to the emergency to quickly classify and look only at relevant messages, and also to monitor the evolution of the emergency.
 
 
 ## Instructions:
