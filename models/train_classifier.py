@@ -22,7 +22,7 @@ from sqlalchemy import create_engine
 import pandas as pd
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.multioutput import MultiOutputClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -84,7 +84,11 @@ def build_model():
         ('clf', MultiOutputClassifier(AdaBoostClassifier()))
     ])
 
-    return pipeline
+    parameters = {'vect__ngram_range': [(1,1), (1,2)]}
+
+    cv = GridSearchCV(pipeline, parameters)
+
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
